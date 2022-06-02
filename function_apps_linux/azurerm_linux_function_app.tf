@@ -30,6 +30,7 @@ resource "azurerm_linux_function_app" "functionapp_linux_new" {
   # Optional
   # storage_account_access_key = azurerm_storage_account.sa_new.primary_access_key
 
-  # Required
-  site_config {}
+  site_config {
+    always_on = true
+  }
 }

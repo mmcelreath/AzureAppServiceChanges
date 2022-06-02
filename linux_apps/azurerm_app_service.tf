@@ -11,8 +11,9 @@ resource "azurerm_app_service_plan" "asp_linux_old" {
   kind                = "linux"
 
   sku {
-    tier = "Basic"
-    size = "B1"
+    tier     = "Basic"
+    size     = "B1"
+    capacity = 1
   }
 }
 
@@ -24,7 +25,8 @@ resource "azurerm_app_service" "as_linux_old" {
 
   site_config {
     dotnet_framework_version = "v4.0"
-    scm_type                 = "LocalGit"
     linux_fx_version         = "DOCKER|appsvcsample/python-helloworld:latest"
+
+    always_on = true
   }
 }

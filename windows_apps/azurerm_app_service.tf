@@ -10,8 +10,9 @@ resource "azurerm_app_service_plan" "asp_windows_old" {
   kind                = "windows"
 
   sku {
-    tier = "Basic"
-    size = "B1"
+    tier     = "Basic"
+    size     = "B1"
+    capacity = 1
   }
 }
 
@@ -23,6 +24,6 @@ resource "azurerm_app_service" "as_windows_old" {
 
   site_config {
     dotnet_framework_version = "v4.0"
-    scm_type                 = "LocalGit"
+    always_on = true
   }
 }

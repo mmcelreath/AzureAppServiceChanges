@@ -9,6 +9,7 @@ resource "azurerm_service_plan" "asp_windows_new" {
   location            = azurerm_resource_group.rg_appservice_windows_new.location
   os_type             = "Windows"
   sku_name            = "B1"
+  worker_count        = 1
 }
 
 resource "azurerm_windows_web_app" "as_windows_new" {
@@ -18,9 +19,10 @@ resource "azurerm_windows_web_app" "as_windows_new" {
   service_plan_id     = azurerm_service_plan.asp_windows_new.id
 
   site_config {
+    always_on = true
+    
     application_stack {
       dotnet_version = "v4.0"
     }
-    # scm_type         = "LocalGit"
   }
 }

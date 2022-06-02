@@ -31,4 +31,8 @@ resource "azurerm_function_app" "functionapp_linux_old" {
   app_service_plan_id        = azurerm_app_service_plan.asp_functionapp_linux_old.id
   storage_account_name       = azurerm_storage_account.sa_old.name
   storage_account_access_key = azurerm_storage_account.sa_old.primary_access_key
+
+  site_config {
+    always_on = true
+  }
 }
