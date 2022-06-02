@@ -56,34 +56,31 @@ resource "azurerm_app_service" "as_linux_old" {
 ## azurerm_linux_web_app
 
 ```
-resource "azurerm_resource_group" "rg_appservice_linux_old" {
-  name     = "rg-appservice-linux-old"
+resource "azurerm_resource_group" "rg_appservice_linux_new" {
+  name     = "rg-appservice-linux-new"
   location = "Eastus2"
 }
 
-resource "azurerm_app_service_plan" "asp_linux_old" {
-  name                = "asp-linux-old"
-  location            = azurerm_resource_group.rg_appservice_linux_old.location
-  resource_group_name = azurerm_resource_group.rg_appservice_linux_old.name
-  reserved            = true
-  kind                = "linux"
-
-  sku {
-    tier = "Basic"
-    size = "B1"
-  }
+resource "azurerm_service_plan" "asp_linux_new" {
+  name                = "asp-linux-new"
+  resource_group_name = azurerm_resource_group.rg_appservice_linux_new.name
+  location            = azurerm_resource_group.rg_appservice_linux_new.location
+  # reserved            = true
+  os_type             = "Linux"
+  sku_name            = "B1"
 }
 
-resource "azurerm_app_service" "as_linux_old" {
-  name                = "as-linux-old-01"
-  location            = azurerm_resource_group.rg_appservice_linux_old.location
-  resource_group_name = azurerm_resource_group.rg_appservice_linux_old.name
-  app_service_plan_id = azurerm_app_service_plan.asp_linux_old.id
+resource "azurerm_linux_web_app" "as_linux_new" {
+  name                = "as-linux-new-01"
+  location            = azurerm_resource_group.rg_appservice_linux_new.location
+  resource_group_name = azurerm_resource_group.rg_appservice_linux_new.name
+  service_plan_id     = azurerm_service_plan.asp_linux_new.id
 
   site_config {
-    dotnet_framework_version = "v4.0"
-    scm_type                 = "LocalGit"
-    linux_fx_version         = "DOCKER|appsvcsample/python-helloworld:latest"
+      application_stack {
+        docker_image = "appsvcsample/python-helloworld"
+        docker_image_tag = "latest"
+      }
   }
 }
 ```
