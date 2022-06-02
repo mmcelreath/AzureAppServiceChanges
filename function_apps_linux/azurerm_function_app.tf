@@ -15,7 +15,7 @@ resource "azurerm_app_service_plan" "asp_functionapp_linux_old" {
   name                = "asp-functionapp-linux-old"
   location            = azurerm_resource_group.rg_functionapp_linux_old.location
   resource_group_name = azurerm_resource_group.rg_functionapp_linux_old.name
-  reserved            = true 
+  reserved            = true
   kind                = "Linux"
 
   sku {

@@ -16,20 +16,20 @@ resource "azurerm_service_plan" "asp_functionapp_linux_new" {
   resource_group_name = azurerm_resource_group.rg_functionapp_linux_new.name
   location            = azurerm_resource_group.rg_functionapp_linux_new.location
   # reserved            = true 
-  os_type             = "Linux"
-  sku_name            = "B1"
+  os_type  = "Linux"
+  sku_name = "B1"
 }
 
 resource "azurerm_linux_function_app" "functionapp_linux_new" {
-  name                = "functionapp-linux-new-01"
-  location            = azurerm_resource_group.rg_functionapp_linux_new.location
-  resource_group_name = azurerm_resource_group.rg_functionapp_linux_new.name
+  name                 = "functionapp-linux-new-01"
+  location             = azurerm_resource_group.rg_functionapp_linux_new.location
+  resource_group_name  = azurerm_resource_group.rg_functionapp_linux_new.name
   service_plan_id      = azurerm_service_plan.asp_functionapp_linux_new.id
   storage_account_name = azurerm_storage_account.sa_new.name
-  
+
   # Optional
   # storage_account_access_key = azurerm_storage_account.sa_new.primary_access_key
-    
+
   # Required
   site_config {}
 }
