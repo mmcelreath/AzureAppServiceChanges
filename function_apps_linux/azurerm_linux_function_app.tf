@@ -4,7 +4,7 @@ resource "azurerm_resource_group" "rg_functionapp_linux_new" {
 }
 
 resource "azurerm_storage_account" "sa_new" {
-  name                     = "safuncwinnew01"
+  name                     = "safunclinnew01"
   resource_group_name      = azurerm_resource_group.rg_functionapp_linux_new.name
   location                 = azurerm_resource_group.rg_functionapp_linux_new.location
   account_tier             = "Standard"
@@ -20,7 +20,7 @@ resource "azurerm_service_plan" "asp_functionapp_linux_new" {
   sku_name            = "B1"
 }
 
-resource "azurerm_windows_function_app" "functionapp_linux_new" {
+resource "azurerm_linux_function_app" "functionapp_linux_new" {
   name                = "functionapp-linux-new-01"
   location            = azurerm_resource_group.rg_functionapp_linux_new.location
   resource_group_name = azurerm_resource_group.rg_functionapp_linux_new.name
