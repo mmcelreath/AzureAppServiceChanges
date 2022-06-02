@@ -34,8 +34,9 @@ resource "azurerm_app_service_plan" "asp_linux_old" {
   kind                = "linux"
 
   sku {
-    tier = "Basic"
-    size = "B1"
+    tier     = "Basic"
+    size     = "B1"
+    capacity = 1
   }
 }
 
@@ -47,8 +48,9 @@ resource "azurerm_app_service" "as_linux_old" {
 
   site_config {
     dotnet_framework_version = "v4.0"
-    scm_type                 = "LocalGit"
     linux_fx_version         = "DOCKER|appsvcsample/python-helloworld:latest"
+
+    always_on = true
   }
 }
 ```
@@ -66,8 +68,9 @@ resource "azurerm_service_plan" "asp_linux_new" {
   resource_group_name = azurerm_resource_group.rg_appservice_linux_new.name
   location            = azurerm_resource_group.rg_appservice_linux_new.location
   # reserved            = true
-  os_type             = "Linux"
-  sku_name            = "B1"
+  os_type      = "Linux"
+  sku_name     = "B1"
+  worker_count = 1
 }
 
 resource "azurerm_linux_web_app" "as_linux_new" {
@@ -77,10 +80,13 @@ resource "azurerm_linux_web_app" "as_linux_new" {
   service_plan_id     = azurerm_service_plan.asp_linux_new.id
 
   site_config {
-      application_stack {
-        docker_image = "appsvcsample/python-helloworld"
-        docker_image_tag = "latest"
-      }
+    always_on = true
+    
+    application_stack {
+      docker_image     = "appsvcsample/python-helloworld"
+      docker_image_tag = "latest"
+      dotnet_version   = "6.0"
+    }
   }
 }
 ```
@@ -102,8 +108,9 @@ resource "azurerm_app_service_plan" "asp_windows_old" {
   kind                = "windows"
 
   sku {
-    tier = "Basic"
-    size = "B1"
+    tier     = "Basic"
+    size     = "B1"
+    capacity = 1
   }
 }
 
@@ -115,7 +122,7 @@ resource "azurerm_app_service" "as_windows_old" {
 
   site_config {
     dotnet_framework_version = "v4.0"
-    scm_type                 = "LocalGit"
+    always_on = true
   }
 }
 ```
@@ -134,6 +141,7 @@ resource "azurerm_service_plan" "asp_windows_new" {
   location            = azurerm_resource_group.rg_appservice_windows_new.location
   os_type             = "Windows"
   sku_name            = "B1"
+  worker_count        = 1
 }
 
 resource "azurerm_windows_web_app" "as_windows_new" {
@@ -143,10 +151,11 @@ resource "azurerm_windows_web_app" "as_windows_new" {
   service_plan_id     = azurerm_service_plan.asp_windows_new.id
 
   site_config {
+    always_on = true
+    
     application_stack {
       dotnet_version = "v4.0"
     }
-    # scm_type         = "LocalGit"
   }
 }
 ```
@@ -173,7 +182,7 @@ resource "azurerm_app_service_plan" "asp_functionapp_linux_old" {
   name                = "asp-functionapp-linux-old"
   location            = azurerm_resource_group.rg_functionapp_linux_old.location
   resource_group_name = azurerm_resource_group.rg_functionapp_linux_old.name
-  reserved            = true 
+  reserved            = true
   kind                = "Linux"
 
   sku {
@@ -189,6 +198,10 @@ resource "azurerm_function_app" "functionapp_linux_old" {
   app_service_plan_id        = azurerm_app_service_plan.asp_functionapp_linux_old.id
   storage_account_name       = azurerm_storage_account.sa_old.name
   storage_account_access_key = azurerm_storage_account.sa_old.primary_access_key
+
+  site_config {
+    always_on = true
+  }
 }
 ```
 
@@ -213,22 +226,23 @@ resource "azurerm_service_plan" "asp_functionapp_linux_new" {
   resource_group_name = azurerm_resource_group.rg_functionapp_linux_new.name
   location            = azurerm_resource_group.rg_functionapp_linux_new.location
   # reserved            = true 
-  os_type             = "Linux"
-  sku_name            = "B1"
+  os_type  = "Linux"
+  sku_name = "B1"
 }
 
 resource "azurerm_linux_function_app" "functionapp_linux_new" {
-  name                = "functionapp-linux-new-01"
-  location            = azurerm_resource_group.rg_functionapp_linux_new.location
-  resource_group_name = azurerm_resource_group.rg_functionapp_linux_new.name
+  name                 = "functionapp-linux-new-01"
+  location             = azurerm_resource_group.rg_functionapp_linux_new.location
+  resource_group_name  = azurerm_resource_group.rg_functionapp_linux_new.name
   service_plan_id      = azurerm_service_plan.asp_functionapp_linux_new.id
   storage_account_name = azurerm_storage_account.sa_new.name
-  
+
   # Optional
   # storage_account_access_key = azurerm_storage_account.sa_new.primary_access_key
-    
-  # Required
-  site_config {}
+
+  site_config {
+    always_on = true
+  }
 }
 ```
 
@@ -297,15 +311,15 @@ resource "azurerm_service_plan" "asp_functionapp_windows_new" {
 }
 
 resource "azurerm_windows_function_app" "functionapp_windows_new" {
-  name                = "functionapp-windows-new-01"
-  location            = azurerm_resource_group.rg_functionapp_windows_new.location
-  resource_group_name = azurerm_resource_group.rg_functionapp_windows_new.name
+  name                 = "functionapp-windows-new-01"
+  location             = azurerm_resource_group.rg_functionapp_windows_new.location
+  resource_group_name  = azurerm_resource_group.rg_functionapp_windows_new.name
   service_plan_id      = azurerm_service_plan.asp_functionapp_windows_new.id
   storage_account_name = azurerm_storage_account.sa_new.name
-  
+
   # Optional
   # storage_account_access_key = azurerm_storage_account.sa_new.primary_access_key
-    
+
   # Required
   site_config {}
 }
